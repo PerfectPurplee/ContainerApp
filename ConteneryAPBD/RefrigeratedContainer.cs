@@ -17,8 +17,8 @@ public class RefrigeratedContainer : Container {
     public ProductName StoredGoods { get; }
     public double Temperature { get; }
 
-    public RefrigeratedContainer(double maxLoad, ProductName storedGoods)
-        : base("R", maxLoad, false) {
+    public RefrigeratedContainer(double maxLoad, ProductName storedGoods, double height, double depth, double ownWeight)
+        : base("R", maxLoad, false, height, depth, ownWeight) {
         StoredGoods = storedGoods;
         Temperature = ProductTemperatures[storedGoods];
     }

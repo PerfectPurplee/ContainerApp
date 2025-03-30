@@ -17,7 +17,7 @@ public class ContainerShip
 
     public bool AddContainer(Container container)
     {
-        if (Containers.Count >= MaxContainers || GetTotalWeight() + container.MaxLoad > MaxWeight)
+        if (Containers.Count >= MaxContainers || GetTotalWeight() + container.OwnWeight > MaxWeight)
         {
             Console.WriteLine("Nie można dodać kontenera - przekroczone limity statku.");
             return false;
@@ -26,14 +26,38 @@ public class ContainerShip
         return true;
     }
 
-    public double GetTotalWeight()
+    public bool AddContainers(List<Container> containers) {
+        return containers.All(container => AddContainer(container));
+    }
+
+    public bool RemoveContainer(string serialNumber)
     {
-        double weight = 0;
-        foreach (var container in Containers)
+        var container = Containers.Find(c => c.SerialNumber == serialNumber);
+        if (container != null)
         {
-            weight += container.MaxLoad;
+            Containers.Remove(container);
+            return true;
         }
-        return weight;
+        return false;
+    }
+
+    public bool ReplaceContainer(string serialNumber, Container newContainer) {
+        return RemoveContainer(serialNumber) && AddContainer(newContainer);
+    }
+
+    public bool TransferContainer(ContainerShip targetShip, string serialNumber)
+    {
+        var container = Containers.Find(c => c.SerialNumber == serialNumber);
+        if (container != null && targetShip.AddContainer(container))
+        {
+            Containers.Remove(container);
+            return true;
+        }
+        return false;
+    }
+
+    public double GetTotalWeight() {
+        return Containers.Sum(container => container.OwnWeight + container.CurrentLoad);
     }
 
     public void PrintShipStatus()

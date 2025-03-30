@@ -14,7 +14,10 @@ public class LiquidContainer : Container, IHazardNotifier
     {
         double maxAllowedLoad = IsHazardous ? MaxLoad * 0.5 : MaxLoad * 0.9;
         if (weight > maxAllowedLoad)
+        {
             NotifyHazard("Próba załadowania niebezpiecznej ilości płynów!");
+            return;
+        }
         base.LoadCargo(weight);
     }
 }
